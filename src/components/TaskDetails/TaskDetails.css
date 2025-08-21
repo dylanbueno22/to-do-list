@@ -503,5 +503,24 @@
     padding: 2px 4px;
   }
 
+  .date-input-section {
+    gap: 3px;
+  }
 
+  .date-info {
+    font-size: 10px;
+  }
+}
+
+/* Date input section */
+.date-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.date-info {
+  color: #9CA3AF;
+  font-size: 12px;
+  text-align: center;
 }

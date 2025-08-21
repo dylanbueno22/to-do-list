@@ -2,14 +2,13 @@ import './Calendar.css'
 
 const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
 
-  // Gerar dias da semana atual (7 dias completos)
   const getWeekDays = () => {
     const today = new Date()
     const days = []
     const startOfWeek = new Date(today)
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1) // Segunda-feira
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1)
 
-    for (let i = 0; i < 7; i++) { // Mudança: de 5 para 7 dias
+    for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek)
       day.setDate(startOfWeek.getDate() + i)
       days.push(day)
@@ -19,7 +18,6 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
 
   const weekDays = getWeekDays()
 
-  // Verificar se um dia tem tarefas
   const getTasksForDay = (date) => {
     return tasks.filter(task => {
       const taskDate = new Date(task.date)
@@ -27,7 +25,6 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
     })
   }
 
-  // Formatar data para exibição
   const formatDay = (date) => {
     const day = date.getDate()
     const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -35,13 +32,11 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
     return `${day} ${dayName}`
   }
 
-  // Verificar se é hoje
   const isToday = (date) => {
     const today = new Date()
     return date.toDateString() === today.toDateString()
   }
 
-  // Verificar se é a data selecionada
   const isSelected = (date) => {
     return date.toDateString() === selectedDate.toDateString()
   }
@@ -49,8 +44,6 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
   return (
     <div className="calendar">
       <h2 className="section-title">Calendário</h2>
-
-      {/* Seletor de dias da semana */}
       <div className="week-selector">
         {weekDays.map((day) => {
           const dayTasks = getTasksForDay(day)
@@ -69,8 +62,6 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
           )
         })}
       </div>
-
-      {/* Timeline do dia selecionado */}
       <div className="timeline-section">
         <h3>Agenda do Dia</h3>
         <div className="timeline">
@@ -92,8 +83,6 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
           ))}
         </div>
       </div>
-
-      {/* Resumo da semana */}
       <div className="day-summary card">
         <h3>Resumo da Semana</h3>
         <div className="summary-stats">
@@ -115,8 +104,6 @@ const Calendar = ({ selectedDate, onSelectDate, tasks }) => {
           </div>
         </div>
       </div>
-
-      {/* Próximas tarefas da semana */}
       {getTasksForDay(selectedDate).length > 0 && (
         <div className="upcoming-tasks card">
           <h3>Próximas Tarefas da Semana</h3>

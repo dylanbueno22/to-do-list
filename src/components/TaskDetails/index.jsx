@@ -3,12 +3,18 @@ import './TaskDetails.css'
 
 const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll, onUpdateTaskStatus }) => {
   const [showAddTaskForm, setShowAddTaskForm] = useState(false)
+  
+  const getInitialDate = () => {
+    const today = new Date()
+    return today.toISOString().split('T')[0]
+  }
+
   const [newTask, setNewTask] = useState({
     title: '',
     group: '',
     time: '',
     priority: 'medium',
-    date: new Date().toISOString().split('T')[0] // Data atual como padrão
+    date: getInitialDate()
   })
 
   const handleAddTask = () => {
@@ -23,7 +29,7 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
         group: '', 
         time: '', 
         priority: 'medium',
-        date: new Date().toISOString().split('T')[0]
+        date: getInitialDate()
       })
       setShowAddTaskForm(false)
     }
@@ -65,7 +71,6 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
     }
   }
 
-  // Agrupar tarefas por dia
   const groupTasksByDay = (tasks) => {
     const grouped = {}
     
@@ -88,45 +93,74 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
       grouped[dayKey].tasks.push(task)
     })
     
-    // Ordenar por data
     return Object.values(grouped).sort((a, b) => a.date - b.date)
   }
 
-  // Filtrar tarefas por grupo selecionado
   const filteredTasks = selectedGroup 
     ? tasks.filter(task => task.group === selectedGroup.name)
     : tasks;
 
   const groupedTasks = groupTasksByDay(filteredTasks)
 
+  const getStartOfCurrentWeek = () => {
+    const today = new Date()
+    const day = today.getDay()
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+    const monday = new Date(today.setDate(diff))
+    return monday
+  }
 
+  const getEndOfCurrentWeek = () => {
+    const monday = getStartOfCurrentWeek()
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+    return sunday
+  }
+
+  const isInCurrentWeek = (dateString) => {
+    const selectedDate = new Date(dateString)
+    const startOfWeek = getStartOfCurrentWeek()
+    const endOfWeek = getEndOfCurrentWeek()
+    
+    return selectedDate >= startOfWeek && selectedDate <= endOfWeek
+  }
+
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value
+    
+    if (!isInCurrentWeek(selectedDate)) {
+      setNewTask({...newTask, date: getInitialDate()})
+      alert('Só é possível agendar tarefas na semana atual (segunda a domingo).')
+      return
+    }
+    
+    setNewTask({...newTask, date: selectedDate})
+  }
 
   return (
     <div className="task-details">
-                     <div className="header">
-          <h2 className="section-title">
-            {selectedGroup ? `Tarefas de ${selectedGroup.name}` : 'Tarefas da Semana'}
-          </h2>
-         <div className="header-actions">
-           <button 
-             className="btn add-task-btn"
-             onClick={() => setShowAddTaskForm(true)}
-           >
-             + Nova Tarefa
-           </button>
-           {tasks.length > 0 && (
-             <button 
-               className="btn btn-secondary clear-btn"
-               onClick={onClearAll}
-               title="Limpar todas as tarefas"
-             >
-               🗑️ Limpar
-             </button>
-           )}
-         </div>
-       </div>
-
-      {/* Formulário para adicionar tarefa */}
+      <div className="header">
+        <h2 className="section-title">
+          {selectedGroup ? `Tarefas de ${selectedGroup.name}` : 'Tarefas da Semana'}
+        </h2>
+        <div className="header-actions">
+          <button 
+            className="btn add-task-btn"
+            onClick={() => setShowAddTaskForm(true)}
+          >
+            + Nova Tarefa
+          </button>
+          {tasks.length > 0 && (
+            <button 
+              className="btn btn-secondary clear-btn"
+              onClick={onClearAll}
+              title="Limpar todas as tarefas"
+            >
+              🗑️ Limpar
+            </button>
+          )}
+        </div>
+      </div>
       {showAddTaskForm && (
         <div className="add-task-form card">
           <h3>Adicionar Nova Tarefa</h3>
@@ -137,26 +171,33 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
             value={newTask.title}
             onChange={(e) => setNewTask({...newTask, title: e.target.value})}
           />
-                     <input
-             type="text"
-             className="input"
-             placeholder="Grupo (ex: Reuniões, Viagem)"
-             value={newTask.group}
-             onChange={(e) => setNewTask({...newTask, group: e.target.value})}
-           />
-                     <input
-             type="text"
-             className="input"
-             placeholder="Horário (ex: 10:00 - 12:00)"
-             value={newTask.time}
-             onChange={(e) => setNewTask({...newTask, time: e.target.value})}
-           />
-           <input
-             type="date"
-             className="input"
-             value={newTask.date}
-             onChange={(e) => setNewTask({...newTask, date: e.target.value})}
-           />
+          <input
+            type="text"
+            className="input"
+            placeholder="Grupo (ex: Reuniões, Viagem)"
+            value={newTask.group}
+            onChange={(e) => setNewTask({...newTask, group: e.target.value})}
+          />
+          <input
+            type="text"
+            className="input"
+            placeholder="Horário (ex: 10:00 - 12:00)"
+            value={newTask.time}
+            onChange={(e) => setNewTask({...newTask, time: e.target.value})}
+          />
+          <div className="date-input-section">
+            <input
+              type="date"
+              className="input"
+              value={newTask.date}
+              min={getStartOfCurrentWeek().toISOString().split('T')[0]}
+              max={getEndOfCurrentWeek().toISOString().split('T')[0]}
+              onChange={handleDateChange}
+            />
+            <small className="date-info">
+              Semana atual: {getStartOfCurrentWeek().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} a {getEndOfCurrentWeek().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} (incluindo fim de semana)
+            </small>
+          </div>
           <select
             className="input"
             value={newTask.priority}
@@ -179,8 +220,6 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
           </div>
         </div>
       )}
-
-      {/* Lista de Tarefas */}
       <div className="tasks-list">
         {groupedTasks.length === 0 ? (
           <div className="empty-state">
@@ -264,8 +303,6 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
           ))
         )}
       </div>
-
-      {/* Progresso */}
       {filteredTasks.length > 0 && (
         <div className="progress-card card">
           <h3>

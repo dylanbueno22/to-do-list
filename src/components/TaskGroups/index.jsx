@@ -4,12 +4,53 @@ import "./TaskGroups.css";
 const TaskGroups = ({ groups, selectedGroup, onSelectGroup, onAddTaskToGroup }) => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedGroupForAdd, setSelectedGroupForAdd] = useState(null);
+    
+    const getInitialDate = () => {
+        const today = new Date()
+        return today.toISOString().split('T')[0]
+    }
+
     const [newTask, setNewTask] = useState({
         title: '',
         time: '',
         priority: 'medium',
-        date: new Date().toISOString().split('T')[0] // Data atual como padrão
+        date: getInitialDate()
     });
+
+    const getStartOfCurrentWeek = () => {
+        const today = new Date()
+        const day = today.getDay()
+        const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+        const monday = new Date(today.setDate(diff))
+        return monday
+    }
+
+    const getEndOfCurrentWeek = () => {
+        const monday = getStartOfCurrentWeek()
+        const sunday = new Date(monday)
+        sunday.setDate(monday.getDate() + 6)
+        return sunday
+    }
+
+    const isInCurrentWeek = (dateString) => {
+        const selectedDate = new Date(dateString)
+        const startOfWeek = getStartOfCurrentWeek()
+        const endOfWeek = getEndOfCurrentWeek()
+        
+        return selectedDate >= startOfWeek && selectedDate <= endOfWeek
+    }
+
+    const handleDateChange = (e) => {
+        const selectedDate = e.target.value
+        
+        if (!isInCurrentWeek(selectedDate)) {
+            setNewTask({...newTask, date: getInitialDate()})
+            alert('Só é possível agendar tarefas na semana atual (segunda a domingo).')
+            return
+        }
+        
+        setNewTask({...newTask, date: selectedDate})
+    }
 
     const handleAddTaskToGroup = (group) => {
         setSelectedGroupForAdd(group);
@@ -28,7 +69,7 @@ const TaskGroups = ({ groups, selectedGroup, onSelectGroup, onAddTaskToGroup }) 
                 title: '', 
                 time: '', 
                 priority: 'medium',
-                date: new Date().toISOString().split('T')[0]
+                date: getInitialDate()
             });
             setShowAddForm(false);
             setSelectedGroupForAdd(null);
@@ -42,15 +83,13 @@ const TaskGroups = ({ groups, selectedGroup, onSelectGroup, onAddTaskToGroup }) 
             title: '', 
             time: '', 
             priority: 'medium',
-            date: new Date().toISOString().split('T')[0]
+            date: getInitialDate()
         });
     };
     
     return (
         <div className="task-groups">
             <h2 className="section-title">Grupos de Tarefas</h2>
-            
-            {/* Lista de Grupos */}
             <div className="groups-list">
                 {groups.map((group) => (
                     <div
@@ -82,7 +121,6 @@ const TaskGroups = ({ groups, selectedGroup, onSelectGroup, onAddTaskToGroup }) 
                 ))}
             </div>
 
-            {/* Formulário para adicionar tarefa ao grupo */}
             {showAddForm && selectedGroupForAdd && (
                 <div className="add-to-group-form">
                     <div className="form-header">
@@ -103,12 +141,19 @@ const TaskGroups = ({ groups, selectedGroup, onSelectGroup, onAddTaskToGroup }) 
                         value={newTask.time}
                         onChange={(e) => setNewTask({...newTask, time: e.target.value})}
                     />
-                    <input
-                        type="date"
-                        className="input"
-                        value={newTask.date}
-                        onChange={(e) => setNewTask({...newTask, date: e.target.value})}
-                    />
+                    <div className="date-input-section">
+                        <input
+                            type="date"
+                            className="input"
+                            value={newTask.date}
+                            min={getStartOfCurrentWeek().toISOString().split('T')[0]}
+                            max={getEndOfCurrentWeek().toISOString().split('T')[0]}
+                            onChange={handleDateChange}
+                        />
+                        <small className="date-info">
+                            Semana atual: {getStartOfCurrentWeek().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} a {getEndOfCurrentWeek().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} (incluindo fim de semana)
+                        </small>
+                    </div>
                     <select
                         className="input"
                         value={newTask.priority}
