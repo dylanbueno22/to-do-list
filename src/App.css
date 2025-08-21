@@ -1,0 +1,248 @@
+/* Reset e configurações globais */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #0F0F0F;
+  color: #FFFFFF;
+  line-height: 1.6;
+}
+
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0F0F0F 0%, #1A1A1A 100%);
+  padding: 20px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 300px 1fr 350px;
+  gap: 24px;
+  height: calc(100vh - 40px);
+}
+
+/* Sidebar - Grupos de Tarefas */
+.sidebar {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2A2A2A;
+  overflow-y: auto;
+}
+
+/* Main Content - Detalhes das Tarefas */
+.main-content {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2A2A2A;
+  overflow-y: auto;
+}
+
+/* Calendar Sidebar */
+.calendar-sidebar {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2A2A2A;
+  overflow-y: auto;
+}
+
+/* Cards gerais */
+.card {
+  background: #2A2A2A;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #3A3A3A;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  border-color: #4A4A4A;
+}
+
+/* Botões */
+.btn {
+  background: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  background: #2563EB;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #374151;
+  color: #D1D5DB;
+}
+
+.btn-secondary:hover {
+  background: #4B5563;
+}
+
+/* Inputs */
+.input {
+  background: #374151;
+  border: 1px solid #4B5563;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Input de data */
+.input[type="date"] {
+  color: #FFFFFF;
+  position: relative;
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: #9CA3AF;
+  border-radius: 4px;
+  cursor: pointer;
+  filter: invert(1);
+}
+
+.input[type="date"]::-webkit-inner-spin-button,
+.input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1A1A;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4B5563;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B7280;
+}
+
+
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .container {
+    grid-template-columns: 250px 1fr 300px;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 12px;
+  }
+  
+  .app {
+    padding: 8px;
+  }
+
+  .sidebar, .main-content, .calendar-sidebar {
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 16px; /* Evita zoom no iOS */
+  }
+
+  /* Melhorar experiência de toque */
+  .btn, .group-card, .task-card, .day-btn {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 4px;
+  }
+
+  .container {
+    gap: 8px;
+  }
+
+  .sidebar, .main-content, .calendar-sidebar {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Animações adicionais */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.task-card {
+  animation: slideIn 0.3s ease-out;
+}

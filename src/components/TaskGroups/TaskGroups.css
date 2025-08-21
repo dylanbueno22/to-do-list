@@ -1,0 +1,260 @@
+/* Estilos para o componente TaskGroups */
+
+.task-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 16px;
+}
+
+/* Lista de grupos */
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.group-card {
+  display: flex;
+  align-items: center;
+  background: #2A2A2A;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #3A3A3A;
+}
+
+.group-card:hover {
+  background: #3A3A3A;
+  transform: translateY(-2px);
+}
+
+.group-card.selected {
+  background: #3A3A3A;
+  border-color: #3B82F6;
+}
+
+.group-color-bar {
+  width: 4px;
+  height: 40px;
+  border-radius: 2px;
+  margin-right: 12px;
+}
+
+.group-content {
+  flex: 1;
+}
+
+.group-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.group-count {
+  font-size: 12px;
+  color: #9CA3AF;
+}
+
+/* Ações dos grupos */
+.group-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.group-select-btn,
+.group-add-btn {
+  background: #374151;
+  border: 1px solid #4B5563;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #D1D5DB;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+}
+
+.group-select-btn:hover {
+  background: #4B5563;
+  color: #FFFFFF;
+  transform: scale(1.1);
+}
+
+.group-add-btn:hover {
+  background: #10B981;
+  color: #FFFFFF;
+  transform: scale(1.1);
+}
+
+/* Formulário para adicionar ao grupo */
+.add-to-group-form {
+  background: #1F1F1F;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #2A2A2A;
+  margin-top: 16px;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.form-header h3 {
+  color: #FFFFFF;
+  font-size: 16px;
+  margin: 0;
+}
+
+.close-btn {
+  background: #374151;
+  border: 1px solid #4B5563;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #D1D5DB;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.close-btn:hover {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
+.add-to-group-form .input {
+  margin-bottom: 12px;
+}
+
+.add-to-group-form .form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.add-to-group-form .form-actions .btn {
+  flex: 1;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+  .task-groups {
+    gap: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .groups-list {
+    gap: 8px;
+  }
+
+  .group-card {
+    padding: 12px;
+  }
+
+  .group-name {
+    font-size: 13px;
+  }
+
+  .group-count {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-groups {
+    gap: 12px;
+  }
+
+  .section-title {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .group-card {
+    padding: 10px;
+  }
+
+  .group-color-bar {
+    width: 3px;
+    height: 32px;
+  }
+
+  .group-actions {
+    gap: 3px;
+  }
+
+  .group-select-btn,
+  .group-add-btn {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+
+  .add-to-group-form {
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .form-header h3 {
+    font-size: 13px;
+  }
+
+  .close-btn {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+  }
+
+  .group-actions {
+    gap: 4px;
+  }
+
+  .group-select-btn,
+  .group-add-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .add-to-group-form {
+    padding: 12px;
+    margin-top: 12px;
+  }
+
+  .form-header h3 {
+    font-size: 14px;
+  }
+
+  .close-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+}
