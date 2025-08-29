@@ -6,6 +6,37 @@
   gap: 20px;
 }
 
+/* Header da seção com botão de adicionar grupo */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.add-group-btn {
+  background: #10B981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-group-btn:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+/* Loading dos grupos */
+.loading-groups {
+  text-align: center;
+  padding: 20px;
+  color: #9CA3AF;
+}
+
 .section-title {
   font-size: 18px;
   font-weight: 600;
@@ -72,7 +103,9 @@
 }
 
 .group-select-btn,
-.group-add-btn {
+.group-add-btn,
+.group-edit-btn,
+.group-delete-btn {
   background: #374151;
   border: 1px solid #4B5563;
   border-radius: 50%;
@@ -95,6 +128,18 @@
 
 .group-add-btn:hover {
   background: #10B981;
+  color: #FFFFFF;
+  transform: scale(1.1);
+}
+
+.group-edit-btn:hover {
+  background: #F59E0B;
+  color: #FFFFFF;
+  transform: scale(1.1);
+}
+
+.group-delete-btn:hover {
+  background: #EF4444;
   color: #FFFFFF;
   transform: scale(1.1);
 }
@@ -155,6 +200,35 @@
   flex: 1;
   padding: 8px 16px;
   font-size: 12px;
+}
+
+/* Formulários de grupos */
+.add-group-form,
+.edit-group-form {
+  background: #1F1F1F;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #2A2A2A;
+  margin-top: 16px;
+}
+
+.color-input {
+  height: 40px;
+  padding: 8px;
+  border: 1px solid #4B5563;
+  border-radius: 8px;
+  background: #374151;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
 }
 
 

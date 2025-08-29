@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import './TaskDetails.css'
+import { getInitialDate, getStartOfWeek, getEndOfWeek, isInCurrentWeek } from '../../utils/dateUtils'
+import { groupTasksByDay, getPriorityColor, getStatusColor, getStatusText, getStatusIcon, calculateProgress } from '../../utils/taskUtils'
+
 
 const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll, onUpdateTaskStatus }) => {
   const [showAddTaskForm, setShowAddTaskForm] = useState(false)
-  
-  const getInitialDate = () => {
-    const today = new Date()
-    return today.toISOString().split('T')[0]
-  }
 
   const [newTask, setNewTask] = useState({
     title: '',
@@ -35,96 +33,6 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
     }
   }
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'high': return '#EF4444'
-      case 'medium': return '#F97316'
-      case 'low': return '#10B981'
-      default: return '#6B7280'
-    }
-  }
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'completed': return '#10B981'
-      case 'in-progress': return '#F59E0B'
-      case 'pending': return '#6B7280'
-      default: return '#6B7280'
-    }
-  }
-
-  const getStatusText = (status) => {
-    switch (status) {
-      case 'completed': return 'Concluída'
-      case 'in-progress': return 'Em Produção'
-      case 'pending': return 'Pendente'
-      default: return 'Pendente'
-    }
-  }
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'completed': return '✓'
-      case 'in-progress': return '⚡'
-      case 'pending': return '○'
-      default: return '○'
-    }
-  }
-
-  const groupTasksByDay = (tasks) => {
-    const grouped = {}
-    
-    tasks.forEach(task => {
-      const taskDate = new Date(task.date)
-      const dayKey = taskDate.toDateString()
-      const dayName = taskDate.toLocaleDateString('pt-BR', { 
-        weekday: 'long', 
-        day: 'numeric', 
-        month: 'short' 
-      })
-      
-      if (!grouped[dayKey]) {
-        grouped[dayKey] = {
-          date: taskDate,
-          dayName: dayName.charAt(0).toUpperCase() + dayName.slice(1),
-          tasks: []
-        }
-      }
-      grouped[dayKey].tasks.push(task)
-    })
-    
-    return Object.values(grouped).sort((a, b) => a.date - b.date)
-  }
-
-  const filteredTasks = selectedGroup 
-    ? tasks.filter(task => task.group === selectedGroup.name)
-    : tasks;
-
-  const groupedTasks = groupTasksByDay(filteredTasks)
-
-  const getStartOfCurrentWeek = () => {
-    const today = new Date()
-    const day = today.getDay()
-    const diff = today.getDate() - day + (day === 0 ? -6 : 1)
-    const monday = new Date(today.setDate(diff))
-    return monday
-  }
-
-  const getEndOfCurrentWeek = () => {
-    const monday = getStartOfCurrentWeek()
-    const sunday = new Date(monday)
-    sunday.setDate(monday.getDate() + 6)
-    return sunday
-  }
-
-  const isInCurrentWeek = (dateString) => {
-    const selectedDate = new Date(dateString)
-    const startOfWeek = getStartOfCurrentWeek()
-    const endOfWeek = getEndOfCurrentWeek()
-    
-    return selectedDate >= startOfWeek && selectedDate <= endOfWeek
-  }
-
   const handleDateChange = (e) => {
     const selectedDate = e.target.value
     
@@ -136,6 +44,14 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
     
     setNewTask({...newTask, date: selectedDate})
   }
+
+  const filteredTasks = selectedGroup 
+    ? tasks.filter(task => task.group === selectedGroup.name)
+    : tasks;
+
+  const groupedTasks = groupTasksByDay(filteredTasks)
+  const progressPercentage = calculateProgress(filteredTasks)
+  const completedTasks = filteredTasks.filter(t => (t.status === 'completed' || t.completed)).length
 
   return (
     <div className="task-details">
@@ -161,6 +77,20 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
           )}
         </div>
       </div>
+      
+      {/* Mensagem informativa sobre status da API */}
+      <div className="api-status-notice" style={{
+        backgroundColor: '#E0F2FE',
+        color: '#0C4A6E',
+        padding: '8px 12px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        marginBottom: '12px',
+        border: '1px solid #0284C7'
+      }}>
+        💡 <strong>Status da API:</strong> Tarefas são sincronizadas automaticamente. Se a API não estiver disponível, as tarefas são salvas localmente.
+      </div>
+      
       {showAddTaskForm && (
         <div className="add-task-form card">
           <h3>Adicionar Nova Tarefa</h3>
@@ -190,12 +120,12 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
               type="date"
               className="input"
               value={newTask.date}
-              min={getStartOfCurrentWeek().toISOString().split('T')[0]}
-              max={getEndOfCurrentWeek().toISOString().split('T')[0]}
+              min={getStartOfWeek(new Date()).toISOString().split('T')[0]}
+              max={getEndOfWeek(new Date()).toISOString().split('T')[0]}
               onChange={handleDateChange}
             />
             <small className="date-info">
-              Semana atual: {getStartOfCurrentWeek().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} a {getEndOfCurrentWeek().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} (incluindo fim de semana)
+              Semana atual: {getStartOfWeek(new Date()).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} a {getEndOfWeek(new Date()).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} (incluindo fim de semana)
             </small>
           </div>
           <select
@@ -220,6 +150,7 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
           </div>
         </div>
       )}
+      
       <div className="tasks-list">
         {groupedTasks.length === 0 ? (
           <div className="empty-state">
@@ -303,6 +234,7 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
           ))
         )}
       </div>
+      
       {filteredTasks.length > 0 && (
         <div className="progress-card card">
           <h3>
@@ -311,13 +243,11 @@ const TaskDetails = ({ tasks, selectedGroup, onDeleteTask, onAddTask, onClearAll
           <div className="progress-bar">
             <div 
               className="progress-fill"
-              style={{ 
-                width: `${(filteredTasks.filter(t => (t.status === 'completed' || t.completed)).length / filteredTasks.length) * 100}%` 
-              }}
+              style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
           <p className="progress-text">
-            {filteredTasks.filter(t => (t.status === 'completed' || t.completed)).length} de {filteredTasks.length} tarefas concluídas
+            {completedTasks} de {filteredTasks.length} tarefas concluídas
           </p>
         </div>
       )}
