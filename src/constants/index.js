@@ -9,7 +9,7 @@ export const DEFAULT_GROUPS = [
 
 // Configurações da API
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'https://api-projeto-to-do-list-37p1z0ui0-dylanbueno22s-projects.vercel.app',
+  BASE_URL: 'https://api-projeto-to-do-list-37p1z0ui0-dylanbueno22s-projects.vercel.app',
   TIMEOUT: 5000
 }
 
