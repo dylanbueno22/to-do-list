@@ -7,7 +7,7 @@ export const DEFAULT_GROUPS = [
 
 // Configurações da API
 export const API_CONFIG = {
-  BASE_URL: 'https://api-projeto-to-do-list-h2opp2xod-dylanbueno22s-projects.vercel.app', // URL atualizada
+  BASE_URL: 'https://api-projeto-to-do-list-87kan9qvu-dylanbueno22s-projects.vercel.app', // URL atualizada
   TIMEOUT: 5000
 }
 
