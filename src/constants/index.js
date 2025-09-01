@@ -5,11 +5,9 @@ export const DEFAULT_GROUPS = [
   { id: 3, name: "Treino", color: "#F59E0B", taskCount: 0 }
 ]
 
-
-
 // Configurações da API
 export const API_CONFIG = {
-  BASE_URL: 'https://api-projeto-to-do-list-27dmnd8fe-dylanbueno22s-projects.vercel.app',
+  BASE_URL: 'https://api-projeto-to-do-list-h2opp2xod-dylanbueno22s-projects.vercel.app', // URL atualizada
   TIMEOUT: 5000
 }
 
