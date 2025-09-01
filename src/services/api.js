@@ -14,10 +14,12 @@ const apiRequest = async (endpoint, options = {}) => {
   };
 
   try {
-    console.log(`Fazendo requisição para: ${url}`);
+    console.log(`🌐 Fazendo requisição para: ${url}`);
+    console.log(`📋 Configuração da requisição:`, config);
     const response = await fetch(url, config);
     
     if (!response.ok) {
+      console.error(`❌ Erro na resposta: ${response.status} - ${response.statusText}`);
       if (response.status === 404) {
         throw new Error(ERROR_MESSAGES.API_NOT_FOUND);
       }
